@@ -30,6 +30,19 @@ jobs:
       - run: pnpm exec tsc -b
       - run: pnpm exec vite build --base=./
 
+      - name: Adapt only preview asset URLs for subpath hosting
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          for path in Path('dist/assets').glob('*.js'):
+              text = path.read_text(encoding='utf-8')
+              text = text.replace('"/media/', '"./media/')
+              text = text.replace("'/media/", "'./media/")
+              path.write_text(text, encoding='utf-8')
+          PY
+
       - name: Publish static preview branch
         shell: bash
         run: |
