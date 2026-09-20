@@ -1,0 +1,48 @@
+name: Build preview branch
+
+on:
+  push:
+    branches: [preview-build]
+
+permissions:
+  contents: write
+
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm verify:reference
+      - run: pnpm exec tsc -b
+      - run: pnpm exec vite build --base=./
+
+      - name: Publish static preview branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/veyra-preview
+          mkdir -p /tmp/veyra-preview
+          cp -a dist/. /tmp/veyra-preview/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan preview
+          git rm -rf . >/dev/null 2>&1 || true
+          cp -a /tmp/veyra-preview/. .
+          touch .nojekyll
+          git add -A
+          git commit -m "Build VEYRA preview"
+          git push --force origin HEAD:preview
