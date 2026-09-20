@@ -111,7 +111,8 @@ const state = {
   transitionTimer: 0,
   revealTimer: 0,
   leaveTimer: 0,
-  appearanceTimer: 0
+  appearanceTimer: 0,
+  suppressFocus: false
 };
 
 const plusIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>';
@@ -406,7 +407,7 @@ function buildHotspots() {
 
       const enter = () => openAppearance(item.id);
       button.addEventListener('pointerenter', enter);
-      button.addEventListener('focus', enter);
+      button.addEventListener('focus', () => { if (!state.suppressFocus) enter(); });
       button.addEventListener('click', () => {
         if (state.appearance === item.id && state.appearancePinned) closeAppearance();
         else {
@@ -521,7 +522,11 @@ function closeAppearance(restoreFocus = true) {
 
     if (restoreFocus) {
       const button = document.querySelector(`[data-hotspot="${previousMode}"]`);
-      if (button) button.focus({ preventScroll: true });
+      if (button) {
+        state.suppressFocus = true;
+        button.focus({ preventScroll: true });
+        state.suppressFocus = false;
+      }
     }
   }, state.reduced ? 0 : 260);
 }
