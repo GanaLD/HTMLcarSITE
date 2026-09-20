@@ -32,13 +32,17 @@ jobs:
           test -f "$SRC/package.json"
           test -f "$SRC/reference-manifest.json"
 
-      - name: Replace adaptation with exact pinned release
+      - name: Replace adaptation with pinned release
         shell: bash
         run: |
           set -euo pipefail
           SRC="$(find /tmp/veyra-release -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+          cp .github/workflows/import-veyra.yml /tmp/import-veyra.yml
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           cp -a "$SRC"/. .
+          rm -rf .github/workflows
+          mkdir -p .github/workflows
+          cp /tmp/import-veyra.yml .github/workflows/import-veyra.yml
 
       - name: Verify exact source tree before commit
         shell: bash
