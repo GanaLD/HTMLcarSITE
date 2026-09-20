@@ -124,7 +124,7 @@ export default function App() {
       image.onload = () => { image.decode().then(resolve, resolve) }
       image.onerror = reject
       image.src = source
-    }))).then(() => { if (!cancelled) setReady(true) }).catch(() => { if (!cancelled) setError('An image could not load. Reload to retry.') })
+    }))).then(() => { if (!cancelled) setReady(true) }).catch(() => { if (!cancelled) setError('Uma imagem não pôde ser carregada. Recarregue a página para tentar novamente.') })
     return () => { cancelled = true }
   }, [])
 
@@ -157,16 +157,16 @@ export default function App() {
 
   return <main className={`experience phase-${phase} ${reduced ? 'reduced' : ''}`} style={{ '--scene-width': typeof plane.width === 'number' ? `${plane.width}px` : undefined, '--scene-height': typeof plane.height === 'number' ? `${plane.height}px` : undefined } as CSSProperties} aria-busy={busy}>
     <header className="masthead">
-      <a className="wordmark" href="/" aria-label="Return to overview">VEYRA</a>
-      <span className="header-middle">Electric vehicle design</span>
-      <span className="concept-label">Independent concept</span>
+      <a className="wordmark" href="/" aria-label="Voltar para a visão geral">VEYRA</a>
+      <span className="header-middle">Design de veículo elétrico</span>
+      <span className="concept-label">Conceito independente</span>
     </header>
 
-    <section ref={stage} className="stage" aria-label="Explore vehicle systems">
+    <section ref={stage} className="stage" aria-label="Explore os sistemas do veículo">
       <div className="image-plane" style={{ ...plane, '--focus-x': `${current.anchor.x}%`, '--focus-y': `${current.anchor.y}%` } as CSSProperties}>
         <div className="media-envelope"><div className="exterior-envelope">
-        <div className="car-visual"><img className="car-image" src={ROOT_IMAGE} alt="Silver electric concept sedan in a studio" draggable={false}/><HoverVideo desired={!appearance && (hovered === 'drive' || hovered === 'battery') ? hovered : null} mode={phase} reduced={reduced} onNeutral={setNeutral}/><div className={`appearance-visual ${appearance && neutral && !appearanceClosing ? 'shown' : ''}`} aria-hidden="true"><img src={appearanceImage} alt="" draggable={false}/></div></div>
-        </div><div className={`detail-visual ${detailVisible ? 'shown' : ''}`}><img className="detail-image" src={current.image} alt={`Illustrative cutaway of the ${current.label.toLowerCase()}`} draggable={false}/></div>
+        <div className="car-visual"><img className="car-image" src={ROOT_IMAGE} alt="Sedã-conceito elétrico prateado em estúdio" draggable={false}/><HoverVideo desired={!appearance && (hovered === 'drive' || hovered === 'battery') ? hovered : null} mode={phase} reduced={reduced} onNeutral={setNeutral}/><div className={`appearance-visual ${appearance && neutral && !appearanceClosing ? 'shown' : ''}`} aria-hidden="true"><img src={appearanceImage} alt="" draggable={false}/></div></div>
+        </div><div className={`detail-visual ${detailVisible ? 'shown' : ''}`}><img className="detail-image" src={current.image} alt={`Vista técnica ilustrativa de ${current.label.toLowerCase()}`} draggable={false}/></div>
         </div>
 
         {phase === 'overview' && ready && hotspots.map(item => {
@@ -182,7 +182,7 @@ export default function App() {
               else { openAppearance(id); setAppearancePinned(true) }
             }} aria-expanded={appearance === id && !appearanceClosing} aria-controls={`appearance-${id}`} aria-label={item.label}>
               <span className="hotspot-ring">{appearance === id && appearancePinned ? <X size={14} strokeWidth={1.5}/> : <Plus size={14} strokeWidth={1.5}/>}</span>
-              <span className="hotspot-label">{id === 'paint' ? 'Paint' : 'Wheels'}</span>
+              <span className="hotspot-label">{id === 'paint' ? 'Pintura' : 'Rodas'}</span>
             </button>
             {appearance === id && !appearanceClosing && <span className="menu-bridge" aria-hidden="true"/>}
             {appearance === id && !appearanceClosing && <AppearanceMenu mode={id} selected={optionId} loaded={loadedOptions} unavailable={failedOptions} waiting={!neutral} onSelect={chooseAppearance} onClose={() => closeAppearance()}/>}
@@ -197,10 +197,10 @@ export default function App() {
       </div>
 
       <div className={`intro ${phase !== 'overview' ? 'hide' : ''}`} aria-hidden={phase !== 'overview'}>
-        <h1>Electric, inside out.</h1><p className="intro-description"><span>Explore beneath the surface.</span><span>Select a point to begin.</span></p>
+        <h1>Elétrico, de dentro para fora.</h1><p className="intro-description"><span>Explore o que existe sob a superfície.</span><span>Selecione um ponto para começar.</span></p>
       </div>
 
-      {phase !== 'overview' && <button ref={closeButton} className="back" onClick={returnToCar} disabled={busy} aria-label="Back to vehicle"><ArrowLeft size={18}/><span>{phase === 'returning' ? 'Returning to vehicle' : 'Back to vehicle'}</span><kbd>Esc</kbd></button>}
+      {phase !== 'overview' && <button ref={closeButton} className="back" onClick={returnToCar} disabled={busy} aria-label="Voltar ao veículo"><ArrowLeft size={18}/><span>{phase === 'returning' ? 'Voltando ao veículo' : 'Voltar ao veículo'}</span><kbd>Esc</kbd></button>}
 
       <aside className={`detail-copy ${phase === 'detail' ? 'shown' : ''}`} aria-hidden={phase !== 'detail'}>
         <div className="detail-introduction">
@@ -211,22 +211,22 @@ export default function App() {
         <div className="part-list">{current.points.map((point, i) => <button key={point.label} tabIndex={phase === 'detail' ? 0 : -1} className={annotation === i ? 'selected' : ''} onClick={() => setAnnotation(annotation === i ? null : i)} aria-expanded={annotation === i}>
           <span className="part-row"><small>{String(i+1).padStart(2,'0')}</small>{point.label}<Plus size={14}/></span>{annotation === i && <span className="part-description">{point.text}</span>}
         </button>)}</div>
-        <div className="benefit"><span>For the driver</span><p>{current.benefit}</p></div>
+        <div className="benefit"><span>Para o motorista</span><p>{current.benefit}</p></div>
         </div>
       </aside>
-      {(busy || !ready) && <div className="transition-status"><span className="small-dot"/>{!ready ? 'Preparing the views' : phase === 'returning' ? 'Returning to the exterior' : `Inside the ${current.label.toLowerCase()}`}</div>}
+      {(busy || !ready) && <div className="transition-status"><span className="small-dot"/>{!ready ? 'Preparando as visualizações' : phase === 'returning' ? 'Voltando ao exterior' : `Por dentro de ${current.label.toLowerCase()}`}</div>}
     </section>
 
     <footer className="scene-footer">
-      <div className="feature-notes" aria-label="Ways to explore">
-        <div className="feature-note"><h3>Electric drive</h3><p>Lift the hood. Explore how the motor turns electricity into motion.</p></div>
-        <div className="feature-note"><h3>Battery architecture</h3><p>Look beneath the body. Discover the energy stored under the cabin.</p></div>
-        <div className="feature-note"><h3>Body finishes</h3><p>Five colours. From studio silver to a vivid electric green.</p></div>
-        <div className="feature-note"><h3>Wheel designs</h3><p>Three expressions. Compare multi-spoke, aero and forged wheels.</p></div>
+      <div className="feature-notes" aria-label="Formas de explorar">
+        <div className="feature-note"><h3>Propulsão elétrica</h3><p>Abra o capô. Explore como o motor transforma eletricidade em movimento.</p></div>
+        <div className="feature-note"><h3>Arquitetura da bateria</h3><p>Veja sob a carroceria. Descubra a energia armazenada sob a cabine.</p></div>
+        <div className="feature-note"><h3>Acabamentos da carroceria</h3><p>Cinco cores. Do prata de estúdio a um verde elétrico vibrante.</p></div>
+        <div className="feature-note"><h3>Design das rodas</h3><p>Três propostas. Compare rodas multirraios, aerodinâmicas e forjadas.</p></div>
       </div>
-      <div className="footer-baseline"><span>VEYRA — Design study</span><span>{phase === 'overview' ? 'Explore systems. Personalise the exterior.' : 'Illustrative engineering. Concept visualisation.'}</span></div>
+      <div className="footer-baseline"><span>VEYRA — Estudo de design</span><span>{phase === 'overview' ? 'Explore os sistemas. Personalize o exterior.' : 'Engenharia ilustrativa. Visualização conceitual.'}</span></div>
     </footer>
-    <p className="sr-only" role="status" aria-live="polite">{busy ? `${phase === 'entering' ? 'Opening' : 'Closing'} ${current.label}` : phase === 'detail' ? `${current.label} view. Press Escape to return.` : 'Vehicle overview. Choose a system.'}</p>
-    {error && <div className="error-message" role="alert">{error}<button onClick={() => setError('')} aria-label="Dismiss message"><X size={16}/></button></div>}
+    <p className="sr-only" role="status" aria-live="polite">{busy ? `${phase === 'entering' ? 'Abrindo' : 'Fechando'} ${current.label}` : phase === 'detail' ? `Visualização de ${current.label}. Pressione Escape para voltar.` : 'Visão geral do veículo. Escolha um sistema.'}</p>
+    {error && <div className="error-message" role="alert">{error}<button onClick={() => setError('')} aria-label="Fechar mensagem"><X size={16}/></button></div>}
   </main>
 }
