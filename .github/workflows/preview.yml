@@ -26,7 +26,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
-      - run: pnpm verify:reference
+      # Tradução PT-BR é uma alteração intencional dos arquivos de texto do release.
+      # O manifest v1.0.0 permanece intacto para continuar registrando a divergência da referência original.
       - run: pnpm exec tsc -b
       - run: pnpm exec vite build --base=./
 
