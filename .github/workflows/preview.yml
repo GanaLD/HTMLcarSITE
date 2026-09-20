@@ -37,12 +37,13 @@ jobs:
           rm -rf /tmp/veyra-preview
           mkdir -p /tmp/veyra-preview
           cp -a dist/. /tmp/veyra-preview/
+          touch /tmp/veyra-preview/.nojekyll
+          cd /tmp/veyra-preview
+          git init
+          git checkout -b preview
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch --orphan preview
-          git rm -rf . >/dev/null 2>&1 || true
-          cp -a /tmp/veyra-preview/. .
-          touch .nojekyll
           git add -A
           git commit -m "Build VEYRA preview"
-          git push --force origin HEAD:preview
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git push --force origin preview
